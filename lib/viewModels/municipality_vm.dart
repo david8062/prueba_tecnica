@@ -7,14 +7,18 @@ class MunicipalityVM extends ChangeNotifier {
     List<MunicipalityModel> _data = [];
     List<MunicipalityModel> get data => _data;
 
-    Future<void> fetchData () async {
-        try{
+    Future<void> fetchData() async {
+        try {
             final response = await _apiService.fetchMunicipios();
-            _data = List<MunicipalityModel>.from(response.map((json) => MunicipalityModel.fromJson(json)));
-        }
-        catch (error){
-            print("Error al obtener los datos $error");
+            if (response['login'] == 'Success') {
+                final List<dynamic> municipiosData = response['data'];
+                _data = municipiosData.map((json) => MunicipalityModel.fromJson(json)).toList();
+                notifyListeners();
+            } else {
+                throw Exception('Error: ${response['login']}');
+            }
+        } catch (error) {
+            print("Error al obtener los datos en el view model $error");
         }
     }
-
 }
