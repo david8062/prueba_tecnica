@@ -4,6 +4,9 @@ import 'package:prueba_tecnica/assets/styles/colors.dart';
 import 'package:prueba_tecnica/components/search.dart';
 import 'package:prueba_tecnica/viewModels/municipality_vm.dart';
 import 'package:prueba_tecnica/components/navbar.dart';
+import 'package:prueba_tecnica/views/institutions_view.dart';
+
+import '../viewModels/institutions_vm.dart';
 
 class Municipality extends StatefulWidget {
   const Municipality();
@@ -54,44 +57,42 @@ class _MunicipalityState extends State<Municipality> {
               if (vm.data.isEmpty) {
                 return const Center(child: Text('No hay datos disponibles'));
               }
-              return
-                Padding(padding: const EdgeInsets.all(16.0),
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: SizedBox(
                   width: double.infinity,
                   child: DataTable(
                     headingRowColor: MaterialStateColor.resolveWith((states) => AppColors.background),
                     dataRowColor: MaterialStateColor.resolveWith((states) => AppColors.background),
                     columns: const [
-                      DataColumn(
-                      label: Text ("Nombre")
-                      ),
-                      DataColumn(
-                      label: Text("Dane")
-                      ),
-                      DataColumn(
-                     label: Text("")
-                      )
+                      DataColumn(label: Text ("Nombre")),
+                      DataColumn(label: Text("Dane")),
+                      DataColumn(label: Text(""))
                     ],
                     rows: vm.data.map((municipality) {
                       return DataRow(
-                        color: MaterialStateColor.resolveWith((states) => Colors.white), // Color de fondo de la fila de datos
+                        color: MaterialStateColor.resolveWith((states) => Colors.white),
                         cells: [
                           DataCell(Text(municipality.name)),
                           DataCell(Text(municipality.dane)),
                           DataCell(ElevatedButton(
                             onPressed: () {
+                              _sendDane(context, municipality.dane);
                             },
-                            child: Text("Consulta"),
+                            child: const Text(
+                              "Consulta",
+                              style: TextStyle(
+                                  color: AppColors.textColors,
+                                  fontWeight: FontWeight.w400
+                              ),
+                            ),
                           ))
                         ],
                       );
                     }).toList(),
-                  ) ,
-                )
-
-
-                );
-
+                  ),
+                ),
+              );
             },
           );
         }
@@ -99,5 +100,16 @@ class _MunicipalityState extends State<Municipality> {
     );
   }
 
+  void _sendDane(BuildContext context, String dane) {
 
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InstitutionsView(dane: dane ),
+      ),
+    );
+  }
 }
+
+
+
