@@ -1,31 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:prueba_tecnica/assets/styles/colors.dart';
+import '../views/municipality_view.dart';
 
 class Search extends StatelessWidget {
-  const Search({super.key });
+  const Search({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(20.0),
-      ),
+    TextEditingController searchController = TextEditingController();
+
+    return Center(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center, // Alinear el contenido del Row al centro horizontalmente
         children: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            color: Colors.grey,
+          TextButton(
             onPressed: () {
-              // Add your search functionality here
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const Municipality(),
+                ),
+              );
             },
-          ),
-          const Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Ingrese el Municio o DANE',
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
               ),
+              backgroundColor: MaterialStateProperty.all(AppColors.background),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.home),
+                Text(
+                  "Inicio",
+                  style: TextStyle(color: AppColors.textColors),
+                ),
+              ],
             ),
           ),
         ],

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:prueba_tecnica/components/navbar.dart';
@@ -7,7 +6,7 @@ import 'package:prueba_tecnica/viewModels/institutions_vm.dart';
 import 'package:prueba_tecnica/views/schools_view.dart';
 
 
-import '../components/custom_dataTable.dart';
+import '../components/custom_data_table.dart';
 
 class InstitutionsView extends StatefulWidget {
   final String dane;

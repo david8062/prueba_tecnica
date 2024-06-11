@@ -7,6 +7,9 @@ class InstitutionsVM extends ChangeNotifier {
   List<DataModel> _data = [];
   List<DataModel> get data => _data;
 
+  List<DataModel> _filteredData = [];
+  List<DataModel> get filteredData => _filteredData;
+
   Future<void> fetchData(String codMun) async {
      try {
       final response = await _apiService.fetchInstitutiones(codMun);
@@ -20,6 +23,17 @@ class InstitutionsVM extends ChangeNotifier {
     } catch (error) {
       print("Error al obtener los datos en el view model $error");
     }
+  }
+  void search(String query) {
+    if (query.isEmpty) {
+      _filteredData = _data;
+    } else {
+      _filteredData = _data.where((item) {
+        return item.name.toLowerCase().contains(query.toLowerCase()) ||
+            item.dane.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    }
+    notifyListeners();
   }
 }
 

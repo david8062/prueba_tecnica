@@ -18,7 +18,6 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      print("Peticion Exitosa");
       return jsonDecode(response.body);
     } else {
       throw Exception('Error al obtener los datos');
@@ -29,6 +28,7 @@ class ApiService {
   Future<dynamic> fetchInstitutiones(String codMun) async {
     final response = await http.post(
       Uri.parse(AppConfig.apiUrl),
+
       body: jsonEncode(<String, String>{
         "User": AppConfig.username,
         "Password": AppConfig.password,
@@ -41,16 +41,16 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      print("Petición Exitosa para instituciones de $codMun");
       return jsonDecode(response.body);
     } else {
-      throw Exception('Error al obtener los datos de instituciones para $codMun');
+      throw Exception(
+          'Error al obtener los datos de instituciones para $codMun');
     }
   }
 
   //Api consulta de sedes de colegio
   Future<dynamic> fetchSchools(String codMun) async {
-    final response = await http.post(
+       final response = await http.post(
       Uri.parse(AppConfig.apiUrl),
       body: jsonEncode(<String, String>{
         "User": AppConfig.username,
@@ -64,10 +64,56 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      print("Petición Exitosa para instituciones de $codMun");
+
       return jsonDecode(response.body);
     } else {
-      throw Exception('Error al obtener los datos de instituciones para $codMun');
+      throw Exception(
+          'Error al obtener los datos de sedes para $codMun');
     }
   }
+
+  //API consultas grupos
+  Future<dynamic> fetchGroups(String codMun) async {
+    final response = await http.post(
+      Uri.parse(AppConfig.apiUrl),
+      body: jsonEncode(<String, String>{
+        "User": AppConfig.username,
+        "Password": AppConfig.password,
+        "option": "grupos",
+        "CodSede:": codMun,
+      }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      return jsonDecode(response.body);
+    } else {
+      throw Exception(
+          'Error al obtener los datos de grupos para $codMun');
+    }
   }
+  //Api consulta datos del grupo
+  Future<dynamic> fetchDataGroup(String codMun) async {
+    final response = await http.post(
+      Uri.parse(AppConfig.apiUrl),
+      body: jsonEncode(<String, String>{
+        "User": AppConfig.username,
+        "Password": AppConfig.password,
+        "option": "infoGrupo",
+        "IdGrupo:": codMun,
+      }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      return jsonDecode(response.body);
+    } else {
+      throw Exception(
+          'Error al obtener los datos de grupos para $codMun');
+    }
+  }
+}

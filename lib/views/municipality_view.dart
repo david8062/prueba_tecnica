@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:prueba_tecnica/components/search.dart';
 import 'package:prueba_tecnica/components/navbar.dart';
 import 'package:prueba_tecnica/views/institutions_view.dart';
-import '../components/custom_dataTable.dart';
+import '../components/custom_data_table.dart';
 import '../viewModels/municipality_vm.dart';
 
 
@@ -25,7 +25,7 @@ class _MunicipalityState extends State<Municipality> {
           children: [
             _buildTitle(),
             const Search(),
-            Expanded( // Asegúrate de que la tabla pueda expandirse
+            Expanded(
               child: CustomDataTable<MunicipalityVM>(
                 fetchData: (vm, dane, name) => vm.fetchData(),
                 onButtonPressed: (dane, name) {
