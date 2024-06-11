@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:prueba_tecnica/assets/styles/colors.dart';
 import 'package:prueba_tecnica/components/search.dart';
-import 'package:prueba_tecnica/viewModels/municipality_vm.dart';
 import 'package:prueba_tecnica/components/navbar.dart';
 import 'package:prueba_tecnica/views/institutions_view.dart';
+import '../components/custom_dataTable.dart';
+import '../viewModels/municipality_vm.dart';
 
-import '../viewModels/institutions_vm.dart';
 
 class Municipality extends StatefulWidget {
   const Municipality();
@@ -20,12 +19,27 @@ class _MunicipalityState extends State<Municipality> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const NavBar(),
-      body: Column(
-        children: [
-          _buildTitle(),
-          const Search(),
-          _buildMunicipalityList(),
-        ],
+      body: ChangeNotifierProvider(
+        create: (_) => MunicipalityVM(),
+        child: Column(
+          children: [
+            _buildTitle(),
+            const Search(),
+            Expanded( // Asegúrate de que la tabla pueda expandirse
+              child: CustomDataTable<MunicipalityVM>(
+                fetchData: (vm, dane, name) => vm.fetchData(),
+                onButtonPressed: (dane, name) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => InstitutionsView(dane: dane, name: name),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -34,7 +48,7 @@ class _MunicipalityState extends State<Municipality> {
     return const Padding(
       padding: EdgeInsets.all(20.0),
       child: Text(
-        "Municipios del Tolima",
+        "Municipios",
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w500,
@@ -42,74 +56,8 @@ class _MunicipalityState extends State<Municipality> {
       ),
     );
   }
-
-  Widget _buildMunicipalityList() {
-    return FutureBuilder<void>(
-      future: Provider.of<MunicipalityVM>(context, listen: false).fetchData(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return const Center(child: Text('Error al cargar los datos'));
-        } else {
-          return Consumer<MunicipalityVM>(
-            builder: (context, vm, child) {
-              if (vm.data.isEmpty) {
-                return const Center(child: Text('No hay datos disponibles'));
-              }
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: DataTable(
-                    headingRowColor: MaterialStateColor.resolveWith((states) => AppColors.background),
-                    dataRowColor: MaterialStateColor.resolveWith((states) => AppColors.background),
-                    columns: const [
-                      DataColumn(label: Text ("Nombre")),
-                      DataColumn(label: Text("Dane")),
-                      DataColumn(label: Text(""))
-                    ],
-                    rows: vm.data.map((municipality) {
-                      return DataRow(
-                        color: MaterialStateColor.resolveWith((states) => Colors.white),
-                        cells: [
-                          DataCell(Text(municipality.name)),
-                          DataCell(Text(municipality.dane)),
-                          DataCell(ElevatedButton(
-                            onPressed: () {
-                              _sendDane(context, municipality.dane);
-                            },
-                            child: const Text(
-                              "Consulta",
-                              style: TextStyle(
-                                  color: AppColors.textColors,
-                                  fontWeight: FontWeight.w400
-                              ),
-                            ),
-                          ))
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                ),
-              );
-            },
-          );
-        }
-      },
-    );
-  }
-
-  void _sendDane(BuildContext context, String dane) {
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => InstitutionsView(dane: dane ),
-      ),
-    );
-  }
 }
+
 
 
 
